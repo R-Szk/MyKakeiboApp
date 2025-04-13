@@ -25,11 +25,6 @@ function Home() {
 
     const totalAssetsView = totalAssets.data?.[0]?.sum ?? 0;
 
-    useEffect(() => {
-        // 取得したデータをコンソールに表示
-        console.log(totalAssets.data);
-    }, [totalAssets.data]);
-
     // 直近5件の支出を取得
     const expenseItems = useFetchData(
         'income_outgo_items',
@@ -135,7 +130,7 @@ function Home() {
                     <p className='font-semibold'>最近の支出5件</p>
                     <div className='space-y-1'>
                         {expenseItems.data.map((expense, index) => (
-                            <div key={index} className='flex items-center justify-between p-2 border-b'>
+                            <div key={index} onClick={() => navigate("/edit/${expense.id}")} className='flex items-center justify-between p-2 border-b'>
                                 {/* <span className='text-2xl'>{expense.icon}</span> */}
                                 <span className='flex-1 ml-2'>{expense.outgo_categories.outgo_category_name}</span>
                                 <span className={`${expense.color} font-bold`}>{expense.amount.toLocaleString()}円</span>
