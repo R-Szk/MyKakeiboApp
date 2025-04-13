@@ -305,7 +305,7 @@ function ItemRegistry() {
 
         {/* ボタン */}
         <div class="p-6 space-y-2">
-          <button class="w-full p-3 text-white bg-yellow-600 rounded-md font-bold" onClick={handleRegister}>登録</button>
+          <button class="w-full p-3 text-white bg-yellow-600 rounded-md font-bold" onClick={handleRegister}>{itemId ? "更新" : "登録"}</button>
           <button class="w-full p-1 text-white bg-blue-500 rounded-md" onClick={() => navigate('/')}>キャンセル</button>
         </div>
       </div>
