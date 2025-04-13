@@ -129,11 +129,11 @@ function Home() {
                 <div className='p-4 border-b bg-gray-50'>
                     <p className='font-semibold'>最近の支出5件</p>
                     <div className='space-y-1'>
-                        {expenseItems.data.map((expense, index) => (
-                            <div key={index} onClick={() => navigate("/edit/${expense.id}")} className='flex items-center justify-between p-2 border-b'>
+                        {expenseItems.data.map((item) => (
+                            <div key={item.id} onClick={() => navigate(`/item-registry/${item.id}`)} className='flex items-center justify-between p-2 border-b'>
                                 {/* <span className='text-2xl'>{expense.icon}</span> */}
-                                <span className='flex-1 ml-2'>{expense.outgo_categories.outgo_category_name}</span>
-                                <span className={`${expense.color} font-bold`}>{expense.amount.toLocaleString()}円</span>
+                                <span className='flex-1 ml-2'>{item.outgo_categories.outgo_category_name}</span>
+                                <span className={`${item.color} font-bold`}>{item.amount.toLocaleString()}円</span>
                             </div>
                         ))}
                     </div>

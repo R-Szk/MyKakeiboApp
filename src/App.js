@@ -14,6 +14,7 @@ function App() {
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/item-registry' element={<ItemRegistry />} />
+            <Route path='/item-registry/:itemId' element={<ItemRegistry />} />
           </Routes>
         </div>
         // {/* 資産情報

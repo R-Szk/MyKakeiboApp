@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, memo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import format from 'date-fns/format';
 import ja from "date-fns/locale/ja";
@@ -59,6 +59,33 @@ function ItemRegistry() {
   // ページ遷移用の関数
   const navigate = useNavigate();
 
+  // URLパラメータからIDを取得
+  const { itemId } = useParams();
+
+  // アイテムの登録・編集用のURLパラメータがある場合は、データを取得してフォームにセット
+  useEffect(() => {
+    const fetchItem = async () => {
+      const { data, error } = await supabase
+        .from('income_outgo_items')
+        .select('*, outgo_categories(outgo_category_name), income_categories(income_category_name), payment_methods(payment_method_name)')
+        .eq('id', itemId)
+        .single();
+      
+      if (error) {
+        console.error(error);
+      } else if (data) {
+        setAmount(data.amount.toString());
+        setActiveTab(data.is_outgo ? "支出" : "収入");
+        setSelectedCategory(activeTab === "支出" ? data.outgo_categories.outgo_category_name : data.income_categories.income_category_name);
+        setSelectedDate(new Date(data.transaction_date));
+        setMemo(data.memo);
+        setSelectedPaymentMethod(data.payment_methods.payment_method_name);
+      }
+    };
+
+    fetchItem();
+  }, [itemId, incomeCategories, outgoCategories, activeTab]);
+
   // カレンダーとカテゴリ、支払い方法のウィンドウの外側をクリックした場合に閉じる
   const datePickerRef = useRef(null);
   const calendarRef = useRef(null);
@@ -107,25 +134,49 @@ function ItemRegistry() {
     }
 
     // Supabaseにデータを登録
-    const { error } = await supabase.from('income_outgo_items').insert([
-      {
-        amount: amountNumber,
-        outgo_category_id: activeTab === "支出" ? categoryId : null,
-        income_category_id: activeTab === "収入" ? categoryId : null,
-        memo: memo,
-        transaction_date: selectedDate.toISOString().split("T")[0],
-        payment_method_id: paymentMethodId,
-        is_outgo: activeTab === "支出",
+    if(itemId) {
+      // 編集の場合
+      const { error } = await supabase
+        .from('income_outgo_items')
+        .update({
+          amount: amountNumber,
+          outgo_category_id: activeTab === "支出" ? categoryId : null,
+          income_category_id: activeTab === "収入" ? categoryId : null,
+          memo: memo,
+          transaction_date: selectedDate.toISOString().split("T")[0],
+          payment_method_id: paymentMethodId,
+          is_outgo: activeTab === "支出",
+        })
+        .eq('id', itemId);
+      if (error) {
+        alert("データの更新に失敗しました");
+      } else {
+        navigate('/');  // トップページに遷移
       }
-    ]);
-
-    if (error) {
-      console.error('Error inserting data:', error.message);
-      alert("データの登録に失敗しました");
-      return;
     } else {
-      navigate('/');  // トップページに遷移
+      // 新規登録の場合
+      const { error } = await supabase.from('income_outgo_items').insert([
+        {
+          amount: amountNumber,
+          outgo_category_id: activeTab === "支出" ? categoryId : null,
+          income_category_id: activeTab === "収入" ? categoryId : null,
+          memo: memo,
+          transaction_date: selectedDate.toISOString().split("T")[0],
+          payment_method_id: paymentMethodId,
+          is_outgo: activeTab === "支出",
+        }
+      ])
+
+      if (error) {
+        console.error('Error inserting data:', error.message);
+        alert("データの登録に失敗しました");
+        return;
+      } else {
+        navigate('/');  // トップページに遷移
+      }
     }
+
+    
   };
 
   return (
