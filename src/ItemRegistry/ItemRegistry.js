@@ -62,6 +62,9 @@ function ItemRegistry() {
   // URLパラメータからIDを取得
   const { itemId } = useParams();
 
+  // 削除モーダルの開閉
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   // アイテムの登録・編集用のURLパラメータがある場合は、データを取得してフォームにセット
   useEffect(() => {
     const fetchItem = async () => {
@@ -323,7 +326,21 @@ function ItemRegistry() {
           <button class="w-full p-3 text-white bg-yellow-600 rounded-md font-bold" onClick={handleRegister}>{itemId ? "更新" : "登録"}</button>
           <button class="w-full p-1 text-white bg-blue-500 rounded-md" onClick={() => navigate('/')}>キャンセル</button>
           {itemId && (
-            <button class="w-full p-1 text-white bg-red-500 rounded-md" onClick={handleDelete}>削除</button>
+            <>
+              <button class="w-full p-1 text-white bg-red-500 rounded-md mt-2" onClick={() => setIsDeleteModalOpen(true)}>削除</button>
+              {isDeleteModalOpen && (
+                <div className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50'>
+                  <div className='bg-white p-4 rounded-md shadow-md w-80'>
+                    {/* <p>本当に削除しますか？</p> */}
+                    <h2 className='text-lg mb-4 text-center'>このデータを削除しますか？</h2>
+                    <div className='flex justify-around'>
+                      <button className='text-blue-500' onClick={() => setIsDeleteModalOpen(false)}>キャンセル</button>
+                      <button className='text-red-500' onClick={handleDelete}>削除する</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
