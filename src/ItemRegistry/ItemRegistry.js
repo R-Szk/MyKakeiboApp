@@ -175,8 +175,23 @@ function ItemRegistry() {
         navigate('/');  // トップページに遷移
       }
     }
+  };
 
-    
+  //  削除処理
+  const handleDelete = async () => {
+    if (window.confirm("本当に削除しますか？")) {
+      const { error } = await supabase
+        .from('income_outgo_items')
+        .delete()
+        .eq('id', itemId);
+
+      if (error) {
+        console.error('Error deleting data:', error.message);
+        alert("データの削除に失敗しました");
+      } else {
+        navigate('/');  // トップページに遷移
+      }
+    }
   };
 
   return (
@@ -307,6 +322,9 @@ function ItemRegistry() {
         <div class="p-6 space-y-2">
           <button class="w-full p-3 text-white bg-yellow-600 rounded-md font-bold" onClick={handleRegister}>{itemId ? "更新" : "登録"}</button>
           <button class="w-full p-1 text-white bg-blue-500 rounded-md" onClick={() => navigate('/')}>キャンセル</button>
+          {itemId && (
+            <button class="w-full p-1 text-white bg-red-500 rounded-md" onClick={handleDelete}>削除</button>
+          )}
         </div>
       </div>
       
