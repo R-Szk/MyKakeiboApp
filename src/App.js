@@ -1,6 +1,7 @@
 import './App.css';
 import Home from './Home';
 import ItemRegistry from './ItemRegistry/ItemRegistry';
+import KakeiboList from './KakeiboList/kakeiboList';
 import { useState, useRef } from 'react';
 import { Routes, Route } from 'react-router-dom';
   
@@ -15,6 +16,7 @@ function App() {
             <Route path='/' element={<Home />} />
             <Route path='/item-registry' element={<ItemRegistry />} />
             <Route path='/item-registry/:itemId' element={<ItemRegistry />} />
+            <Route path='/item-history' element={<KakeiboList />} />
           </Routes>
         </div>
         // {/* 資産情報
