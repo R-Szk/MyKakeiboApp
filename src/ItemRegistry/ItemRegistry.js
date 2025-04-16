@@ -182,18 +182,16 @@ function ItemRegistry() {
 
   //  削除処理
   const handleDelete = async () => {
-    if (window.confirm("本当に削除しますか？")) {
-      const { error } = await supabase
-        .from('income_outgo_items')
-        .delete()
-        .eq('id', itemId);
+    const { error } = await supabase
+      .from('income_outgo_items')
+      .delete()
+      .eq('id', itemId);
 
-      if (error) {
-        console.error('Error deleting data:', error.message);
-        alert("データの削除に失敗しました");
-      } else {
-        navigate('/');  // トップページに遷移
-      }
+    if (error) {
+      console.error('Error deleting data:', error.message);
+      alert("データの削除に失敗しました");
+    } else {
+      navigate('/');  // トップページに遷移
     }
   };
 
