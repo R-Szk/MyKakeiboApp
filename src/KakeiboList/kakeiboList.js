@@ -6,32 +6,43 @@ import { Pie as ChartPie } from "react-chartjs-2";
 import { format, startOfMonth, endOfMonth } from "date-fns";
 
 import useFetchData from "../Supabase/useFetchData";
+import { useEffect, useState } from "react";
+import { supabase } from "../Supabase/supabaseClient";
 
 chartJs.register(ArcElement, Tooltip, Legend);
 chartJs.overrides.pie.plugins.legend.position = "right";
 
 function KakeiboList() {
-    const currentMonth = format(new Date(), 'yyyy年M月');   // 現在の年月
+    const displayDay = new Date(); // 支出・収入を取得するための日付。デフォルトでは現在の日付を使用
     const navigate = useNavigate();
 
-    // 各カテゴリの支出額を取得（現在の月の支出分のみ）
-    const expenditureEachCategory = useFetchData(
-        'income_outgo_items',
-        'outgo_category_id, outgo_categories(outgo_category_name), amount.sum()',
-        [
-            { column: 'is_outgo', value: true, operator: 'eq' },
-            { column: 'transaction_date', value: format(startOfMonth(new Date()), 'yyyy-MM-dd'), operator: 'gte' },
-            { column: 'transaction_date', value: format(endOfMonth(new Date()), 'yyyy-MM-dd'), operator: 'lte' }
-        ]);
+    const [expenditureEachCategory, setExpenditureEachCategory] = useState([]);
+
+    // カテゴリ毎の支出額を取得（画面を開いた時は現在の月の支出分のみ）
+    useEffect(() => {
+        const fetchItem = async () => {
+            const { data, error } = await supabase.rpc('get_outgo_summary_by_category', {
+                start_date: format(startOfMonth(displayDay), 'yyyy-MM-dd'),
+                end_date: format(endOfMonth(displayDay), 'yyyy-MM-dd'),
+            });
+
+            if (error) {
+                console.error('Error fetching item:', error);
+            } else if(data) {
+                setExpenditureEachCategory(data);
+                console.log('Fetched item:', data);
+            }
+        }
+        fetchItem();
+    }, []);
 
     // 円グラフの表示設定(データや色など)
-    const sortedExpenditure = expenditureEachCategory.data.sort((a, b) => b.sum - a.sum);
+    const sortedExpenditure = expenditureEachCategory.sort((a, b) => b.sum - a.sum);
     const pieData = {
-        labels: expenditureEachCategory.data.map(item => item.outgo_categories?.outgo_category_name || '未分類'),
+        labels: expenditureEachCategory.map(item => item.outgo_category_name || '未分類'),
         datasets: [
             {
-                // data: expenditureEachCategory.data.map(item => item.sum),
-                data: sortedExpenditure.map(item => item.sum),
+                data: sortedExpenditure.map(item => item.total_amount),
                 backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#FF6384', '#36A2EB'],
             },
         ]
@@ -54,11 +65,11 @@ function KakeiboList() {
                 <div className="max-w-[27rem] mx-auto space-y-2">
                     {/* 収支グラフ */}
                     <div className="p-4 border-b bg-gray-50">
-                        <p className="flex justify-center font-semibold">{currentMonth}</p>
+                        <p className="flex justify-center font-semibold">{format(displayDay, 'yyyy年M月')}</p>
                         <div className="flex items-center justify-center">
                             {/* 収支の記録が無い場合は円グラフを非表示にする */}
                             <div style={{ width: 220, height: 220 }}>
-                                {expenditureEachCategory.data.length > 0 ? (
+                                {expenditureEachCategory.length > 0 ? (
                                     <ChartPie data={pieData} options={pieOptions} />
                                 ) : (
                                     <div className="flex items-center justify-center h-full">
