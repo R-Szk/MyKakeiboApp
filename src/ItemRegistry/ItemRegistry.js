@@ -1,3 +1,5 @@
+import Header from '../Header';
+
 import { useState, useRef, useEffect, memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -198,12 +200,7 @@ function ItemRegistry() {
   return (
     <div className='bg-gray-100'>
       <div className='max-w-md mx-auto bg-white shadow-md overflow-hidden'>
-        {/* ヘッダー */}
-        <div className='bg-yellow-600 text-white p-4 flex justify-between items-center'>
-          <div className='text-xl font-bold'>☰</div>
-          <div className='text-lg font-smibold'>収支登録</div>
-        </div>
-
+        <Header />
         {/* <!-- タブ切り替え --> */}
         <div class="flex justify-center border-b relative">
           {["支出", "収入"].map((tab) => (
