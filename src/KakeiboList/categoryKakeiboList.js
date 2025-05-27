@@ -33,17 +33,23 @@ function CategoryKakeiboList() {
     );
 
     return (
+        // 選択したカテゴリの支出・収入リストを表示
         <div className="bg-gray-100">
-            <div className="p-4 border-b bg-gray-50">
-                <div className="space-y-1">
-                    {fetchItem.data.map((item) => (
-                        <div key={item.id} onClick={() => navigate(`/item-registry/${item.id}`)} className="flex items-center justify-between p-2 border-b">
-                            <div className="flex items-center">
-                                <div className="text-lg font-semibold">{item.outgo_categories.outgo_category_name}</div>
-                            </div>
-                            <div className="text-gray-500">{item.amount}円</div>
+            <div className="max-w-md mx-auto bg-white shadow-md overflow-hidden">
+                <Header />
+                <div className="max-w-[27rem] mx-auto space-y-2">
+                    <div className="p-4 border-b bg-gray-50">
+                        <div className="space-y-1">
+                            {fetchItem.data.map((item) => (
+                                <div key={item.id} onClick={() => navigate(`/item-registry/${item.id}`)} className="flex items-center justify-between p-2 border-b">
+                                    <div className="flex items-center">
+                                        <div className="text-lg font-semibold">{item.outgo_categories.outgo_category_name}</div>
+                                    </div>
+                                    <div className="text-gray-500">{item.amount}円</div>
+                                </div>
+                            ))}
                         </div>
-                    ))}
+                    </div>
                 </div>
             </div>
         </div>
