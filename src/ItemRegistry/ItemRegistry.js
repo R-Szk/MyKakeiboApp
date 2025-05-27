@@ -93,6 +93,18 @@ function ItemRegistry() {
     fetchItem();
   }, [itemId, incomeCategories, outgoCategories, activeTab]);
 
+  // 編集画面から新規登録に遷移する場合、各種ステートをリセット
+  useEffect(() => {
+    if (!itemId) {
+      setAmount("");
+      setSelectedCategory(null);
+      setSelectedDate(new Date());
+      setMemo("");
+      setSelectedPaymentMethod(null);
+      setActiveTab("支出"); // 新規登録の場合は支出タブをデフォルトにする
+    }
+  }, [itemId]);
+
   // カレンダーとカテゴリ、支払い方法のウィンドウの外側をクリックした場合に閉じる
   const datePickerRef = useRef(null);
   const calendarRef = useRef(null);
