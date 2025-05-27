@@ -2,6 +2,7 @@ import './App.css';
 import Home from './Home';
 import ItemRegistry from './ItemRegistry/ItemRegistry';
 import KakeiboList from './KakeiboList/kakeiboList';
+import CategoryKakeiboList from './KakeiboList/categoryKakeiboList';
 import { useState, useRef } from 'react';
 import { Routes, Route } from 'react-router-dom';
   
@@ -17,6 +18,7 @@ function App() {
             <Route path='/item-registry' element={<ItemRegistry />} />
             <Route path='/item-registry/:itemId' element={<ItemRegistry />} />
             <Route path='/item-history' element={<KakeiboList />} />
+            <Route path='/category-details' element={<CategoryKakeiboList />} />
           </Routes>
         </div>
         // {/* 資産情報

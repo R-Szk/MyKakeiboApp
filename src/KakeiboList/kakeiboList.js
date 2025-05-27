@@ -5,7 +5,6 @@ import { ArcElement, Legend, Tooltip, Chart as chartJs } from "chart.js";
 import { Pie as ChartPie } from "react-chartjs-2";
 import { format, startOfMonth, endOfMonth, isSameMonth, subMonths, addMonths } from "date-fns";
 
-import useFetchData from "../Supabase/useFetchData";
 import { useEffect, useState } from "react";
 import { supabase } from "../Supabase/supabaseClient";
 
@@ -96,7 +95,14 @@ function KakeiboList() {
                     <div className="p-4 border-b bg-gray-50">
                         <div className="overflow-y-auto max-h-96 space-y-1">
                             {expenditureEachCategory.map((item) => (
-                                <div key={item.id} className="flex justify-between items-center border-b p-2">
+                                <div key={item.id} className="flex justify-between items-center border-b p-2" onClick={() => {
+                                    navigate("/category-details", {
+                                        state: {
+                                            categoryId: item.outgo_category_id,
+                                            displayDay: displayDay.toISOString(),
+                                        },
+                                    });
+                                }}>
                                     <p className="flex-1 ml-2">{item.outgo_category_name}</p>
                                     <p className={`${item.color} font-bold`}>{item.total_amount.toLocaleString()}円</p>
                                 </div>
