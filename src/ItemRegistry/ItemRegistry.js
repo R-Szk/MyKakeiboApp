@@ -69,6 +69,8 @@ function ItemRegistry() {
 
   // アイテムの登録・編集用のURLパラメータがある場合は、データを取得してフォームにセット
   useEffect(() => {
+    if (!itemId) return; // 収支を新規追加する場合はitemIdは存在しないため、何もしない
+
     const fetchItem = async () => {
       const { data, error } = await supabase
         .from('income_outgo_items')
