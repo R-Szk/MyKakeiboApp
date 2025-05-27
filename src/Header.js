@@ -20,13 +20,13 @@ function Header() {
                 {/* <nav className='flex flex-col p-4'> */}
                 <ul className="space-y-2">
                     <li>
-                        <NavLink to="/" className='block px-2 py-1 hover:bg-yellow-400 rounded'>ホーム</NavLink>
+                        <NavLink to="/" className='block px-2 py-1 hover:bg-yellow-400 rounded' onClick={() => setIsHamburgerOpen(false)}>ホーム</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/item-registry" className='block px-2 py-1 hover:bg-yellow-400 rounded'>収支登録</NavLink>
+                        <NavLink to="/item-registry" className='block px-2 py-1 hover:bg-yellow-400 rounded' onClick={() => setIsHamburgerOpen(false)}>収支登録</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/item-history" className='block px-2 py-1 hover:bg-yellow-400 rounded'>収支履歴</NavLink>
+                        <NavLink to="/item-history" className='block px-2 py-1 hover:bg-yellow-400 rounded' onClick={() => setIsHamburgerOpen(false)}>収支履歴</NavLink>
                     </li>
                     {/* <NavLink to="/" className='py-2 hover:bg-yellow-200'>ホーム</NavLink>
                     <NavLink to="/item-history" className='py-2 hover:bg-yellow-200'>収支履歴</NavLink>
